@@ -7,7 +7,56 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "clean": "",
+    "app-build": "npm run clean && npm run build && cp -R electron/* dist/electron-app/",
+    "app": "npm run app-build && electron dist/electron-app",
+    "app-win": "electron-packager dist/electron-app electron-app --win --out dist/outs --arch=x64 --app-version 1.0.0 --overwrite",
+    "app-mac": "electron-packager dist/electron-app electron-app --win --out dist/outs --arch=x64 --app-version 1.0.0 --overwrite",
+    "app-linux": "electron-packager dist/electron-app electron-app --win --out dist/outs --arch=x64 --app-version 1.0.0 --overwrite",
+
+    "dist-all": "concurrently 'cd dist/electron-app && npm i' && electron-builder -mwl --x64 --project dist/electron-app",
+    "dist-win": "concurrently 'cd dist/electron-app && npm i' && electron-builder --win --x64 --project dist/electron-app",
+    "dist-mac": "concurrently 'cd dist/electron-app && npm i' && electron-builder --mac --x64 --project dist/electron-app",
+    "dist-linux": "concurrently 'cd dist/electron-app && npm i' && electron-builder --linux --x64 --project dist/electron-app"
+  },
+  "build": {
+    "appId": "com.threeq.app",
+    "productName":"electron-app",
+    "copyright":"@Three",
+    "compression": "store",
+    "directories": {
+      "output": "build"
+    },
+    "asar": false,
+    "extraResources":  {
+      "from": "./app-update.yml",
+      "to": "./b.txt"
+    },
+    "win": {
+      "icon": "xxx/icon.ico",
+      "target": ["exe","zip"],
+      "extraResources":  {
+        "from": "./app-update.yml",
+        "to": "./b.txt"
+      }
+    },
+    "nsis": {
+      "oneClick": false,
+      "guid": "xxxx",
+      "perMachine": true,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "./build/icons/aaa.ico",
+      "uninstallerIcon": "./build/icons/bbb.ico",
+      "installerHeaderIcon": "./build/icons/aaa.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "xxxx"
+    },
+    "mac": {
+      "target": ["dmg","zip"]
+    }
   },
   "private": true,
   "dependencies": {
@@ -28,10 +77,14 @@
     "@angular/cli": "~8.1.2",
     "@angular/compiler-cli": "~8.1.2",
     "@angular/language-service": "~8.1.2",
-    "@types/node": "~8.9.4",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
+    "@types/node": "~8.9.4",
     "codelyzer": "^5.0.0",
+    "concurrently": "^4.1.1",
+    "electron": "^5.0.7",
+    "electron-builder": "^21.1.1",
+    "electron-packager": "^14.0.2",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.1.0",
